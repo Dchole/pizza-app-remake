@@ -25,23 +25,26 @@ export const reviews = [
   }
 ]
 
-export const transitionStyles = {
-  reviewOffScreen: (mobile: boolean) => ({
-    transform: !mobile ? "translateX(0)" : "translateX(100vw)",
+export const transitionStyles = (mobile: boolean, reducedMotion: boolean) => ({
+  reviewOffScreen: {
+    transform: reducedMotion || !mobile ? "translateX(0)" : "translateX(100vw)",
     opacity: 0
-  }),
+  },
 
   reviewEnteredScreen: {
     transform: "translateX(-50%)",
     opacity: 1
   },
-  reviewExitedScreen: (mobile: boolean) => ({
-    transform: !mobile ? "translateX(-25vw)" : "translateX(-100vw)",
+  reviewExitedScreen: {
+    transform: reducedMotion
+      ? "translateX(0)"
+      : !mobile
+      ? "translateX(-35vw)"
+      : "translateX(-100vw)",
     opacity: 0
-  }),
-
+  },
   nameOffScreen: {
-    transform: "translateY(100%)",
+    transform: reducedMotion ? "translateY(0)" : "translateY(100%)",
     opacity: 0
   },
   nameEnteredScreen: {
@@ -49,7 +52,7 @@ export const transitionStyles = {
     opacity: 1
   },
   nameExitedScreen: {
-    transform: "translateY(-100%)",
+    transform: reducedMotion ? "translateY(0)" : "translateY(-100%)",
     opacity: 0
   }
-}
+})

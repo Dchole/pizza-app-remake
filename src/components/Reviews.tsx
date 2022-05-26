@@ -3,12 +3,14 @@ import { useTheme } from "@mui/material/styles"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack"
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward"
 import useMediaQuery from "@mui/material/useMediaQuery"
+import Button from "@mui/material/Button"
 import IconButton from "@mui/material/IconButton"
 import Stack from "@mui/material/Stack"
 import Typography from "@mui/material/Typography"
 import Box from "@mui/system/Box"
 import Container from "@mui/system/Container"
 import { transitionStyles } from "../data/reviews"
+import { renderReview } from "../utils"
 
 interface IProps {
   reviews?: any[]
@@ -27,7 +29,7 @@ const Reviews = ({ reviews = [] }: IProps) => {
     reviewOffScreen,
     reviewExitedScreen,
     reviewEnteredScreen
-  } = transitionStyles
+  } = transitionStyles(mobile, reducedMotion)
 
   const handleNextReview = () =>
     currentReview < reviews.length - 1 && setCurrentReview(currentReview + 1)
@@ -63,6 +65,7 @@ const Reviews = ({ reviews = [] }: IProps) => {
                 mb={4}
                 sx={{
                   left: "50%",
+                  minHeight: 130,
                   top: 0,
                   width: "100%",
                   position: "absolute",
@@ -76,18 +79,34 @@ const Reviews = ({ reviews = [] }: IProps) => {
                   ...(index === currentReview
                     ? reviewEnteredScreen
                     : index < currentReview
-                    ? reviewExitedScreen(mobile)
-                    : reviewOffScreen(mobile))
+                    ? reviewExitedScreen
+                    : reviewOffScreen)
                 }}
               >
-                <em>
-                  &ldquo;{review.split(" ").slice(0, 20).join(" ")}&rdquo;
-                </em>
+                <em>&ldquo;{renderReview.render(review)}&rdquo;</em>
+
+                {renderReview.isShortened(review) && (
+                  <Button
+                    color="inherit"
+                    disableRipple
+                    sx={{
+                      pt: 0,
+                      pb: 0.625,
+                      px: 0,
+                      ml: 1,
+                      fontSize: "1rem",
+                      textDecoration: "underline",
+                      textTransform: "lowercase"
+                    }}
+                  >
+                    continue reading
+                  </Button>
+                )}
               </Typography>
               <Typography
                 align="right"
                 sx={{
-                  bottom: 0,
+                  top: !mobile ? 130 : 175,
                   width: "100%",
                   position: "absolute",
                   transition: transitions.create(
